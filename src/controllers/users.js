@@ -1,4 +1,4 @@
-const { Users } = require("../database");
+const { Users, Shops } = require("../database");
 const bcrypt = require("bcrypt");
 
 const setUser = async (req, res) => {
@@ -59,10 +59,7 @@ const authenticateUser = async (req, res) => {
     let body = req.body;
     const dataUser = await getUsersByEmail(body.email);
     if (dataUser) {
-      console.log(body.password);
-      console.log(dataUser.password);
       const comparePwd = bcrypt.compare(body.password, dataUser.password);
-      console.log("compare", comparePwd);
       if (comparePwd) {
         res.status(200).json({
           data: dataUser,
@@ -95,8 +92,40 @@ const authenticateUser = async (req, res) => {
   }
 };
 
+const registerUser = async (req, res) => {
+  try {
+    let body = req.body;
+    const newPwd = await bcrypt.hash(body.password, 10);
+    body.password = newPwd;
+    const data = await Users.create(body);
+    if (data) {
+      const dataShop = await Shops.create({
+        name: body.name,
+        address: body.address,
+        ruc: body.ruc,
+        userId: data.id,
+      });
+      res.status(200).json({
+        code: 200,
+        message: "Solicitud Exitosa",
+      });
+    } else {
+      res.status(500).json({
+        code: 500,
+        message: "Error al crear usuario",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      code: 500,
+      message: "Error al obterner tipos de setUser",
+    });
+  }
+};
+
 module.exports = {
   setUser,
   getUsers,
   authenticateUser,
+  registerUser,
 };

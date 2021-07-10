@@ -25,15 +25,14 @@ const setSalesGroupByShop = async (req, res) => {
     for (let item of body.sales) {
       const data = await Sales.create(item);
       const dataProduct = await Products.update(
-        { quantity: body.quantityCurrent },
-        { where: { id: body.productId } }
+        { quantity: item.quantityCurrent },
+        { where: { id: item.productId } }
       );
-      newData.push(data);
     }
     res.status(200).json({
       data: newData,
       code: 200,
-      message: "Solicitud Exitosa",
+      message: "Venta registrada correctamente",
     });
   } catch (error) {
     res.status(500).json({
@@ -68,20 +67,22 @@ const getSalesByShop = async (req, res) => {
   try {
     const { shopId } = req.params;
     const data = await Sales.findAll({ where: { shopId } });
-    console.log(data);
+    let dataSales = [];
+    for (let item of data) {
+      const isExist = dataSales.some((sale) => sale.saleId === item.saleId);
+      if (!isExist) {
+        dataSales.push(item);
+      }
+    }
     res.status(200).json({
-      data,
-      response: {
-        code: 200,
-        message: "Solicitud Exitosa",
-      },
+      data: dataSales,
+      code: 200,
+      message: "Solicitud Exitosa",
     });
   } catch (error) {
     res.status(500).json({
-      response: {
-        code: 500,
-        message: "Error al obterner tipos de getSales",
-      },
+      code: 500,
+      message: "Error al obterner tipos de getSales",
     });
   }
 };
