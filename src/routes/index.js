@@ -5,6 +5,7 @@ const { usersRouter } = require("./users");
 const { authRouter } = require("./auth");
 const { shopsRouter } = require("./shops");
 const { salesRouter } = require("./sales");
+const { inventoriesRouter } = require("./inventories");
 
 const routes = Router();
 
@@ -14,5 +15,6 @@ routes.use("", usersRouter);
 routes.use("", authRouter);
 routes.use("", shopsRouter);
 routes.use("", salesRouter);
+routes.use("", inventoriesRouter);
 
 module.exports = { routes };

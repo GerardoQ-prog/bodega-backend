@@ -13,6 +13,7 @@ const productsModel = (conexion) => {
       name: { type: DataTypes.STRING(100) },
       price: { type: DataTypes.FLOAT },
       quantity: { type: DataTypes.INTEGER },
+      quantitySale: { type: DataTypes.INTEGER },
     },
     {
       tableName: "products",

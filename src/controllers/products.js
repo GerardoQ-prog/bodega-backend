@@ -74,6 +74,23 @@ const getProductsByShop = async (req, res) => {
   }
 };
 
+const getProductsById = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const data = await Products.findOne({ where: { id: productId } });
+    res.status(200).json({
+      data: data,
+      code: 200,
+      message: "Solicitud Exitosa",
+    });
+  } catch (error) {
+    res.status(500).json({
+      code: 500,
+      message: "Error al obterner tipos de getProductsById",
+    });
+  }
+};
+
 const putProducts = async (req, res) => {
   try {
     const { shopId } = req.body;
@@ -122,4 +139,5 @@ module.exports = {
   putProducts,
   deleteProducts,
   getProductsByName,
+  getProductsById,
 };
